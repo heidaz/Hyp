@@ -7,6 +7,7 @@ const http = require('http');
 const https = require('https');
 const url = require('url');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -1668,12 +1669,23 @@ app.get('/api/proxy-image', async (req, res) => {
   }
 });
 
+// Check if the build directory exists
+const buildPath = path.join(__dirname, 'build');
+const buildExists = fs.existsSync(buildPath);
+
+// Log build directory status to help with debugging
+console.log(`Build directory ${buildPath} exists: ${buildExists}`);
+
 // Serve static files from the React build
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(buildPath));
 
 // Handle any requests that don't match the ones above
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  if (buildExists) {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  } else {
+    res.status(404).send('Build directory not found. Make sure to run "npm run build" before deploying.');
+  }
 });
 
 // Start the server
