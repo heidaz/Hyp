@@ -9,7 +9,7 @@ import './App.css';
 function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+  const [darkMode] = useState(true); // Removed setDarkMode since it's not used
   const [walletConnected, setWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
   const [activeChain, setActiveChain] = useState('all');
